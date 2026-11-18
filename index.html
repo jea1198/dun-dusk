@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- SEO: refine once business details are confirmed -->
+  <title>Dún &amp; Dusk Nail Studio | Nail Studio in Dún Laoghaire, Dublin</title>
+  <meta name="description" content="Dún &amp; Dusk is a nail studio in Dún Laoghaire offering manicures, Shellac, BIAB, acrylic and pedicure treatments in a calm, considered setting.">
+  <meta name="theme-color" content="#1B1A18">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="canonical" href="https://dunanddusknails.ie/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dunanddusknails.ie/">
+  <meta property="og:title" content="Dún &amp; Dusk Nail Studio, Dún Laoghaire">
+  <meta property="og:description" content="A more considered nail studio in Dún Laoghaire, Dublin.">
+  <meta property="og:image" content="https://dunanddusknails.ie/assets/images/og-image.jpg"><!-- [TBC] 1200x630 image still to be added -->
+
+  
+  <!--
+    FONTS
+    Serif: Instrument Serif (Google Fonts), regular + italic. Used for headings and body text.
+    Sans: General Sans, self-hosted.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100&family=Instrument+Serif:ital@0;1&display=swap">
+  <!-- General Sans is self-hosted (see @font-face in css/styles.css) -->
+  <link rel="preload" href="assets/fonts/GeneralSans-Medium.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- LOCAL BUSINESS STRUCTURED DATA -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NailSalon",
+    "name": "Dún & Dusk Nail Studio",
+    "url": "https://dunanddusknails.ie/",
+    "image": "https://dunanddusknails.ie/assets/images/experience-01.jpg",
+    "telephone": "+353 89 455 8383",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1-4 Sussex Street",
+      "addressLocality": "Dún Laoghaire",
+      "addressRegion": "Co. Dublin",
+      "postalCode": "A96 Y3XN",
+      "addressCountry": "IE"
+    },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "10:00", "closes": "19:30" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "10:00", "closes": "17:30" }
+    ],
+    "email": "dundusknails@gmail.com",
+    "sameAs": ["https://www.instagram.com/dundusknails"]
+  }
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" data-header>
+    <div class="site-header__inner">
+      <!-- White logo over the hero, black logo once the header turns light on scroll -->
+      <a class="logo" href="#top" aria-label="Dún &amp; Dusk Nail Studio, home">
+        <picture class="logo__img logo__img--light"><source media="(max-width: 767px)" srcset="assets/images/symbol-white.svg"><img src="assets/images/logo-white.svg" alt="" width="164" height="32"></picture>
+        <picture class="logo__img logo__img--dark"><source media="(max-width: 767px)" srcset="assets/images/symbol-black.svg"><img src="assets/images/logo-black.svg" alt="" width="164" height="32"></picture>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu" data-nav-toggle>
+          <span class="nav__toggle-label">Menu</span>
+          <span class="nav__toggle-icon" aria-hidden="true"></span>
+        </button>
+
+        <div class="nav__menu" id="nav-menu" data-nav-menu>
+          <ul class="nav__list">
+            <li><a class="nav__link" href="#studio">About</a></li>
+            <li><a class="nav__link" href="#services">Services</a></li>
+            <li><a class="nav__link" href="#gallery">Gallery</a></li>
+            <li><a class="nav__link" href="#visit">Contact</a></li>
+            <li><a class="nav__link" href="policy.html">Policy</a></li>
+          </ul>
+          <a class="btn btn--line nav__book" href="#book" data-book>Book Now</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <!-- Replace placeholder with art-directed photography:
+      <picture>
+        <source media="(max-width: 767px)" srcset="assets/images/hero-portrait.webp">
+        <img class="hero__img" src="assets/images/hero-landscape.webp" alt="Close-up of a hand with a sheer, polished manicure resting on pale stone" fetchpriority="high">
+      </picture> -->
+      <div class="hero__media ph ph--dusk" role="img" aria-label="Placeholder: hero photograph">
+        <span class="ph__label">Hero image · hand close-up, directional side light, stone surface</span>
+      </div>
+
+      <div class="hero__content">
+        <p class="hero__kicker label">Nail Studio · Dún Laoghaire</p>
+        <h1 class="hero__title display-xl" id="hero-title">
+          <span class="line"><span class="line__inner">A little</span></span>
+          <span class="line"><span class="line__inner">more than nails.</span></span>
+        </h1>
+        <a class="btn btn--light hero__cta" href="#book" data-book>Book an Appointment</a>
+      </div>
+    </section>
+
+    <!-- ============ 01 STUDIO ============ -->
+    <section class="section section--porcelain studio" id="studio" aria-labelledby="studio-title">
+      <div class="container grid">
+        <header class="section-head">
+          <span class="section-head__num">01</span>
+          <h2 class="section-head__title label" id="studio-title">The Studio</h2>
+        </header>
+
+        <p class="studio__statement display-md reveal">
+          At Dún &amp; Dusk, beauty is found in the details. From carefully crafted nail treatments to a welcoming, considered atmosphere, every visit is designed to feel a little more personal.
+        </p>
+
+        <figure class="studio__figure reveal-media">
+          <img class="studio__img ratio-4x5" src="assets/images/studio-01.jpg"
+               alt="Line drawing of the Dún &amp; Dusk Nail Studio shopfront on Sussex Street, Dún Laoghaire"
+               width="1086" height="1448" loading="lazy" decoding="async">
+          <figcaption class="caption">The studio, Dún Laoghaire</figcaption>
+        </figure>
+
+        <p class="studio__body body-lg reveal">
+          At Dún & Dusk, we believe beauty is in the details. From thoughtful preparation to the finishing touches, we take care with every step to create beautiful nails and a relaxing experience, just for you.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ 02 SERVICES ============ -->
+    <section class="section section--oak-light services" id="services" aria-labelledby="services-title">
+      <div class="container grid">
+        <header class="section-head">
+          <span class="section-head__num">02</span>
+          <h2 class="section-head__title label" id="services-title">Treatments</h2>
+        </header>
+
+        <p class="services__intro display-sm reveal">Nail care, shaped around you.</p>
+
+        <!-- Hover preview (desktop only). Each row's data-image and data-preview are swapped in here. -->
+        <figure class="services__preview" aria-hidden="true" data-service-preview>
+          <img class="ratio-3x4" src="assets/images/service-01.png" alt="" width="896" height="1200" data-service-preview-img>
+          <figcaption class="caption" data-service-preview-label></figcaption>
+        </figure>
+
+        <!-- Edit services here. Do not add prices until the approved menu is supplied. -->
+        <ol class="service-index" data-service-index>
+          <li class="service-index__item reveal" data-image="assets/images/service-01.png" data-preview="Manicure · clean, natural finish">
+            <div class="service-index__row">
+              <span class="service-index__num">01</span>
+              <span class="service-index__name">Manicure &amp; Nail Care</span>
+              <span class="service-index__note">Shaping, cuticle care and finish</span>
+            </div>
+          </li>
+          <li class="service-index__item reveal" data-image="assets/images/service-02.png" data-preview="Shellac · glossy colour">
+            <div class="service-index__row">
+              <span class="service-index__num">02</span>
+              <span class="service-index__name">Shellac</span>
+              <span class="service-index__note">Long-wearing gloss colour</span>
+            </div>
+          </li>
+          <li class="service-index__item reveal" data-image="assets/images/service-03.png" data-preview="BIAB · sheer strength">
+            <div class="service-index__row">
+              <span class="service-index__num">03</span>
+              <span class="service-index__name">BIAB</span>
+              <span class="service-index__note">Strength for natural nails</span>
+            </div>
+          </li>
+          <li class="service-index__item reveal" data-image="assets/images/image-01.mp4" data-preview="Acrylic · sculpted shape">
+            <div class="service-index__row">
+              <span class="service-index__num">04</span>
+              <span class="service-index__name">Acrylic</span>
+              <span class="service-index__note">New sets and refills</span>
+            </div>
+          </li>
+          <li class="service-index__item reveal" data-image="assets/images/service-05.png" data-preview="Pedicure · foot care">
+            <div class="service-index__row">
+              <span class="service-index__num">05</span>
+              <span class="service-index__name">Pedicure &amp; Foot Treatments</span>
+              <span class="service-index__note">Care, comfort and colour</span>
+            </div>
+          </li>
+          <li class="service-index__item reveal" data-image="assets/images/service-06.png" data-preview="Combinations · hands and feet">
+            <div class="service-index__row">
+              <span class="service-index__num">06</span>
+              <span class="service-index__name">Treatment Combinations</span>
+              <span class="service-index__note">Hands and feet, together</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 03 EXPERIENCE ============ -->
+    <section class="section section--oak experience" aria-labelledby="experience-title">
+      <div class="experience__grid">
+        <figure class="experience__media reveal-media">
+          <img class="experience__img" src="assets/images/experience-01.jpg"
+               alt="Warmly lit manicure tables and armchairs inside the Dún &amp; Dusk studio"
+               width="941" height="1672" loading="lazy" decoding="async">
+        </figure>
+
+        <div class="experience__content">
+          <header class="section-head section-head--inline">
+            <span class="section-head__num">03</span>
+            <span class="label">The Experience</span>
+          </header>
+
+          <h2 class="display-lg experience__title reveal" id="experience-title">
+            A more considered beauty experience.
+          </h2>
+
+          <dl class="craft-notes">
+            <div class="craft-notes__item reveal">
+              <dt class="label">Preparation</dt>
+              <dd>Every appointment begins with a quiet consultation and careful, unhurried preparation.</dd>
+            </div>
+            <div class="craft-notes__item reveal">
+              <dt class="label">Precision</dt>
+              <dd>Clean lines, considered shape and balance, worked slowly and with intention.</dd>
+            </div>
+            <div class="craft-notes__item reveal">
+              <dt class="label">Finish</dt>
+              <dd>A refined, lasting finish, with simple aftercare advice to keep it that way.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 04 GALLERY ============ -->
+    <section class="section section--ink gallery" id="gallery" aria-labelledby="gallery-title">
+      <div class="container">
+        <div class="gallery__head">
+          <header class="section-head section-head--inline">
+            <span class="section-head__num">04</span>
+            <h2 class="label" id="gallery-title">Selected Work</h2>
+          </header>
+          <a class="text-link" href="#" data-instagram>View more on Instagram <span aria-hidden="true">→</span></a>
+        </div>
+
+        <!-- Rolling strip: js/main.js clones the items for a seamless loop; add or remove figures freely.
+             Items are 3:4 by default; add gallery__item--square for 1:1. -->
+        <div class="gallery__track reveal" data-gallery-track>
+          <figure class="gallery__item">
+            <video src="assets/images/image-01.mp4" aria-label="Nail work by Dún &amp; Dusk" width="720" height="1280" muted autoplay loop playsinline preload="metadata"></video>
+          </figure>
+          <figure class="gallery__item gallery__item--square">
+            <img src="assets/images/image-02.jpeg" alt="Nail work by Dún &amp; Dusk" loading="lazy" decoding="async" width="1086" height="1448">
+          </figure>
+          <figure class="gallery__item">
+            <video src="assets/images/image-03.mp4" aria-label="Nail work by Dún &amp; Dusk" width="720" height="1280" muted autoplay loop playsinline preload="metadata"></video>
+          </figure>
+          <figure class="gallery__item gallery__item--square">
+            <img src="assets/images/image-04.jpeg" alt="Nail work by Dún &amp; Dusk" loading="lazy" decoding="async" width="1086" height="1448">
+          </figure>
+          <figure class="gallery__item">
+            <img src="assets/images/image-05.jpeg" alt="Nail work by Dún &amp; Dusk" loading="lazy" decoding="async" width="1086" height="1448">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 05 BOOKING ============ -->
+    <section class="section section--ink-deep booking" id="book" aria-labelledby="booking-title" data-booking-section>
+      <div class="container booking__inner">
+        <header class="section-head section-head--inline">
+          <span class="section-head__num">05</span>
+          <span class="label">Appointments</span>
+        </header>
+        <h2 class="display-xl booking__title reveal" id="booking-title">Your time,<br>reserved.</h2>
+        <p class="body-lg booking__text reveal">Choose a treatment and a time that suits you. Please read our <a class="inline-link" href="policy.html">studio policy</a> before booking.</p>
+        <a class="btn btn--silver booking__cta reveal" href="#" data-book data-book-external>Book an Appointment</a>
+      </div>
+    </section>
+
+    <!-- ============ 06 VISIT ============ -->
+    <section class="section section--night visit" id="visit" aria-labelledby="visit-title">
+      <div class="container grid">
+        <header class="section-head">
+          <span class="section-head__num">06</span>
+          <h2 class="section-head__title label" id="visit-title">Visit</h2>
+        </header>
+
+        <div class="visit__details">
+          <div class="visit__block">
+            <h3 class="label">Studio</h3>
+            <address>
+              1-4 Sussex Street<br>
+              Dún Laoghaire, Co. Dublin<br>
+              A96 Y3XN
+            </address>
+            <a class="text-link" href="#" data-directions>Get directions <span aria-hidden="true">→</span></a>
+          </div>
+
+          <div class="visit__block">
+            <h3 class="label">Opening Hours</h3>
+            <dl class="hours">
+              <div><dt>Monday</dt><dd>Closed</dd></div>
+              <div><dt>Tuesday to Saturday</dt><dd>10am – 7:30pm</dd></div>
+              <div><dt>Sunday</dt><dd>10am – 5:30pm</dd></div>
+            </dl>
+          </div>
+
+          <div class="visit__block">
+            <h3 class="label">Contact</h3>
+            <p>
+              <a href="tel:+353894558383" class="plain-link">089 455 8383</a><br>
+              <a href="mailto:dundusknails@gmail.com" class="plain-link">dundusknails@gmail.com</a><br>
+              <a href="https://www.instagram.com/dundusknails" class="plain-link" data-instagram>@dundusknails</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Google Maps embed -->
+        <div class="visit__map ratio-16x10">
+          <iframe
+            src="https://www.google.com/maps?q=D%C3%BAn+%26+Dusk+Nail+Studio&ll=53.2933405,-6.1365352&z=17&output=embed"
+            title="Dún &amp; Dusk Nail Studio on Google Maps"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <a class="logo logo--footer" href="#top" aria-label="Dún &amp; Dusk Nail Studio, back to top">
+        <img class="logo__img" src="assets/images/logo-white.svg" alt="" width="184" height="36">
+      </a>
+      <p class="label site-footer__folio">1-4 Sussex Street, Dún Laoghaire, Co. Dublin A96 Y3XN</p>
+      <a class="label plain-link site-footer__link" href="policy.html">Studio Policy</a>
+      <p class="label site-footer__copy">© <span data-year></span> Dún &amp; Dusk Nail Studio</p>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp button: number and message are set in js/main.js (SITE.whatsappNumber) -->
+  <a class="wa-float" href="#visit" data-whatsapp aria-label="Message Dún &amp; Dusk on WhatsApp">
+    <span class="wa-float__label" aria-hidden="true">Message us</span>
+    <span class="wa-float__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </span>
+  </a>
+
+  <!-- Mobile booking bar -->
+  <div class="book-bar" data-book-bar>
+    <a class="btn btn--silver book-bar__btn" href="#book" data-book>Book Now</a>
+  </div>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
