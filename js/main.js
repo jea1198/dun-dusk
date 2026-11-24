@@ -51,6 +51,9 @@ const SITE = {
   /* ---- Hero entrance ---- */
   const hero = document.querySelector(".hero");
   requestAnimationFrame(() => requestAnimationFrame(() => hero && hero.classList.add("is-loaded")));
+  // Respect reduced motion: hold the hero video on its poster frame
+  const heroVideo = hero && hero.querySelector("video");
+  if (heroVideo && reduceMotion) { heroVideo.removeAttribute("autoplay"); heroVideo.pause(); }
 
   /* ---- Header state on scroll ---- */
   const header = document.querySelector("[data-header]");
