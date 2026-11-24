@@ -4,6 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Google tag (gtag.js): Google Analytics 4 with Consent Mode v2.
+       Analytics cookies stay off until the visitor accepts in the cookie banner (js/main.js). -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    var ddConsent = null;
+    try { ddConsent = localStorage.getItem('dd-consent'); } catch (e) {}
+    gtag('consent', 'default', {
+      analytics_storage: ddConsent === 'granted' ? 'granted' : 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
+    });
+    gtag('js', new Date());
+    gtag('config', 'G-N6WZWYYN43');
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N6WZWYYN43"></script>
+
   <!-- SEO: refine once business details are confirmed -->
   <title>Dún &amp; Dusk Nail Studio | Nail Studio in Dún Laoghaire, Dublin</title>
   <meta name="description" content="Dún &amp; Dusk is a nail studio in Dún Laoghaire offering manicures, Shellac, BIAB, acrylic and pedicure treatments in a calm, considered setting.">
@@ -361,6 +379,7 @@
       </a>
       <p class="label site-footer__folio">1-4 Sussex Street, Dún Laoghaire, Co. Dublin A96 Y3XN</p>
       <a class="label plain-link site-footer__link" href="policy.html">Studio Policy</a>
+      <button class="label plain-link site-footer__link site-footer__btn" type="button" data-cookie-settings>Cookie settings</button>
       <p class="label site-footer__copy">© <span data-year></span> Dún &amp; Dusk Nail Studio</p>
     </div>
   </footer>

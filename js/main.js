@@ -115,6 +115,10 @@ const SITE = {
     if (!seen) {
       const show = () => {
         if (bubble.dataset.shown) return;
+        if (document.body.classList.contains("consent-open")) {
+          document.addEventListener("dd:consent-closed", () => setTimeout(show, 1500), { once: true });
+          return;
+        }
         bubble.dataset.shown = "1";
         bubble.hidden = false;
         requestAnimationFrame(() => requestAnimationFrame(() => bubble.classList.add("is-visible")));
@@ -135,6 +139,72 @@ const SITE = {
       document.querySelector(".wa-float")?.addEventListener("click", hide);
     }
   }
+
+  /* ---- Cookie consent (Google Consent Mode v2): analytics only after "Accept" ---- */
+  const trackEvent = (name, params = {}) => { if (typeof window.gtag === "function") window.gtag("event", name, params); };
+  const CONSENT_KEY = "dd-consent";
+  const getConsent = () => { try { return localStorage.getItem(CONSENT_KEY); } catch (_) { return null; } };
+  let consentEl = null;
+  const closeConsent = () => {
+    if (!consentEl) return;
+    const el = consentEl; consentEl = null;
+    el.classList.remove("is-visible");
+    document.body.classList.remove("consent-open");
+    setTimeout(() => el.remove(), 500);
+    document.dispatchEvent(new Event("dd:consent-closed"));
+  };
+  const setConsent = (value) => {
+    try { localStorage.setItem(CONSENT_KEY, value); } catch (_) {}
+    if (typeof window.gtag === "function") window.gtag("consent", "update", { analytics_storage: value });
+    closeConsent();
+  };
+  const openConsent = () => {
+    if (consentEl) return;
+    consentEl = document.createElement("div");
+    consentEl.className = "consent";
+    consentEl.setAttribute("role", "dialog");
+    consentEl.setAttribute("aria-label", "Cookie preferences");
+    consentEl.innerHTML =
+      '<p class="consent__title">Cookies</p>' +
+      '<p class="consent__text">We use analytics cookies to understand how visitors use our site. No advertising, no selling of data.</p>' +
+      '<div class="consent__actions">' +
+      '<button class="consent__btn" type="button" data-consent="denied">Decline</button>' +
+      '<button class="consent__btn consent__btn--primary" type="button" data-consent="granted">Accept</button>' +
+      "</div>";
+    consentEl.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-consent]");
+      if (b) setConsent(b.dataset.consent);
+    });
+    document.body.appendChild(consentEl);
+    document.body.classList.add("consent-open");
+    requestAnimationFrame(() => requestAnimationFrame(() => consentEl && consentEl.classList.add("is-visible")));
+  };
+  if (!getConsent()) setTimeout(openConsent, 1200);
+  document.querySelectorAll("[data-cookie-settings]").forEach((b) => b.addEventListener("click", openConsent));
+
+  /* ---- Click tracking (GA4 events) ---- */
+  const where = (el) =>
+    el.closest("[data-promo]") ? "promo_bar" :
+    el.closest(".site-header") ? "header" :
+    el.closest(".hero") ? "hero" :
+    el.closest("#book, .booking") ? "booking_section" :
+    el.closest(".wa-bubble") ? "whatsapp_bubble" :
+    el.classList.contains("wa-float") || el.closest(".wa-float") ? "whatsapp_button" :
+    el.closest("#visit, .visit") ? "contact_section" :
+    el.closest(".site-footer") ? "footer" : "page";
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("a");
+    if (!a) return;
+    const href = a.getAttribute("href") || "";
+    const params = { link_location: where(a), page_path: location.pathname };
+    if (a.matches("[data-promo-link]")) trackEvent("promo_click", { ...params, offer: SITE.promo && SITE.promo.text });
+    else if (a.matches("[data-book]")) trackEvent("book_click", params);
+    else if (a.matches("[data-whatsapp]") || href.includes("wa.me")) trackEvent("whatsapp_click", params);
+    else if (href.startsWith("tel:")) trackEvent("phone_click", params);
+    else if (href.startsWith("mailto:")) trackEvent("email_click", params);
+    else if (a.matches("[data-instagram]")) trackEvent("instagram_click", params);
+    else if (a.matches("[data-directions]")) trackEvent("directions_click", params);
+  }, true);
 
   /* ---- Footer year ---- */
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
