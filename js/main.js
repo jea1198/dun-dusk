@@ -6,7 +6,8 @@
 const SITE = {
   // External booking platform URL (Fresha, Treatwell, Booksy, etc.).
   // Leave empty to send "Book" buttons to WhatsApp instead.
-  bookingUrl: "",
+  // Treatwell booking menu (venue 551344). UTM tags match Treatwell's own "Book now" widget.
+  bookingUrl: "https://widget.treatwell.ie/place/551344/menu/?utm_source=widget&utm_medium=partners&utm_campaign=website_booknow",
   instagramUrl: "https://www.instagram.com/dundusknails",   // e.g. "https://www.instagram.com/dunanddusk"
   directionsUrl: "https://www.google.com/maps/search/?api=1&query=D%C3%BAn+%26+Dusk+Nail+Studio",  // Google Maps share link
   // WhatsApp: international format, digits only, no + or spaces. e.g. Irish mobile 087 123 4567 → "353871234567"
@@ -40,9 +41,62 @@ const SITE = {
   // Book buttons: booking platform if set, otherwise WhatsApp
   setExternal("[data-book]", SITE.bookingUrl || whatsappUrl);
 
+  // Treatwell: on desktop open the booking menu in a centred popup (as Treatwell's
+  // widget does) so the site stays behind it; on touch/small screens, or if the
+  // popup is blocked, the link's normal new-tab behaviour takes over.
+  if (SITE.bookingUrl) {
+    const popupOk = () => window.matchMedia("(min-width: 1024px) and (pointer: fine)").matches;
+    document.querySelectorAll("[data-book]").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        if (!popupOk() || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        const w = 970, h = 760;
+        const left = Math.max(0, window.screenX + (window.outerWidth - w) / 2);
+        const top = Math.max(0, window.screenY + (window.outerHeight - h) / 2);
+        const win = window.open(SITE.bookingUrl, "treatwell-booking",
+          `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`);
+        if (win) { e.preventDefault(); win.focus(); }
+      });
+    });
+  }
+
   // With neither set, the main booking button points to the section itself
   if (!SITE.bookingUrl && !whatsappUrl) {
     document.querySelectorAll("[data-book-external]").forEach((a) => (a.href = "#book"));
+  }
+
+  /* ---- WhatsApp nudge bubble: once per visit, 4s after arrival, auto-hides after 10s ---- */
+  const bubble = document.querySelector("[data-wa-bubble]");
+  if (bubble) {
+    const SEEN = "dd-wa-bubble-seen";
+    let seen = false;
+    try { seen = sessionStorage.getItem(SEEN) === "1"; } catch (_) {}
+    const hide = () => {
+      bubble.classList.remove("is-visible");
+      setTimeout(() => (bubble.hidden = true), 600);
+      try { sessionStorage.setItem(SEEN, "1"); } catch (_) {}
+    };
+    if (!seen) {
+      const show = () => {
+        if (bubble.dataset.shown) return;
+        bubble.dataset.shown = "1";
+        bubble.hidden = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => bubble.classList.add("is-visible")));
+        setTimeout(() => bubble.classList.contains("is-visible") && hide(), 10000);
+      };
+      // Phones: the bubble would sit over the hero headline, so wait until the hero has scrolled away
+      const heroEl = document.querySelector(".hero");
+      const small = window.matchMedia("(max-width: 767px)").matches;
+      setTimeout(() => {
+        if (!small || !heroEl || !("IntersectionObserver" in window)) return show();
+        const io = new IntersectionObserver(([e]) => {
+          if (!e.isIntersecting) { io.disconnect(); setTimeout(show, 600); }
+        }, { threshold: 0.35 });
+        io.observe(heroEl);
+      }, 4000);
+      bubble.querySelector("[data-wa-bubble-close]").addEventListener("click", hide);
+      bubble.querySelector(".wa-bubble__msg").addEventListener("click", hide);
+      document.querySelector(".wa-float")?.addEventListener("click", hide);
+    }
   }
 
   /* ---- Footer year ---- */
@@ -51,6 +105,33 @@ const SITE = {
   /* ---- Hero entrance ---- */
   const hero = document.querySelector(".hero");
   requestAnimationFrame(() => requestAnimationFrame(() => hero && hero.classList.add("is-loaded")));
+  /* ---- Hero headline: alternate phrases every 6s (static under reduced motion) ---- */
+  const heroTitle = hero && hero.querySelector(".hero__title");
+  if (heroTitle && !reduceMotion) {
+    const phrases = [...new Set([...heroTitle.querySelectorAll("[data-phrase]")].map((el) => el.dataset.phrase))];
+    let current = 0;
+    const swap = () => {
+      if (document.hidden) return;                  // don't animate in a background tab
+      const next = (current + 1) % phrases.length;
+      heroTitle.classList.add("is-cycling");
+      heroTitle.querySelectorAll("[data-phrase]").forEach((el) => {
+        if (el.dataset.phrase === phrases[current]) {
+          el.classList.remove("is-active");
+          el.classList.add("is-out");
+        } else if (el.dataset.phrase === phrases[next]) {
+          // Park the incoming line below the mask without animating, then let it rise
+          el.classList.add("is-reset");
+          el.classList.remove("is-out");
+          void el.offsetHeight;
+          el.classList.remove("is-reset");
+          el.classList.add("is-active");
+        }
+      });
+      current = next;
+    };
+    setInterval(swap, 6000);
+  }
+
   // Respect reduced motion: hold the hero video on its poster frame
   const heroVideo = hero && hero.querySelector("video");
   if (heroVideo && reduceMotion) { heroVideo.removeAttribute("autoplay"); heroVideo.pause(); }
@@ -95,8 +176,16 @@ const SITE = {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
+            const el = entry.target;
+            io.unobserve(el);
+            // Images: wait until the file has loaded and decoded, so the fade never shows a half-loaded picture
+            const img = el.classList.contains("reveal-media") && el.querySelector("img");
+            if (!img || (img.complete && img.naturalWidth)) { el.classList.add("is-visible"); return; }
+            let done = false;
+            const show = () => { if (!done) { done = true; el.classList.add("is-visible"); } };
+            img.addEventListener("load", () => (img.decode ? img.decode().then(show, show) : show()), { once: true });
+            img.addEventListener("error", show, { once: true });
+            setTimeout(show, 3000); // never leave it hidden on a very slow connection
           }
         });
       },
@@ -173,20 +262,4 @@ const SITE = {
     index.addEventListener("mouseleave", () => preview.classList.remove("is-active"));
   }
 
-  /* ---- Mobile booking bar: show after hero, hide over booking section ---- */
-  const bar = document.querySelector("[data-book-bar]");
-  const bookingSection = document.querySelector("[data-booking-section]");
-  if (bar && hero && "IntersectionObserver" in window) {
-    let heroVisible = true;
-    let bookingVisible = false;
-    const update = () => {
-      const on = !heroVisible && !bookingVisible;
-      bar.classList.toggle("is-visible", on);
-      document.body.classList.toggle("book-bar-on", on && getComputedStyle(bar).display !== "none");
-    };
-    new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; update(); }, { threshold: 0.2 }).observe(hero);
-    if (bookingSection) {
-      new IntersectionObserver(([e]) => { bookingVisible = e.isIntersecting; update(); }).observe(bookingSection);
-    }
-  }
 })();

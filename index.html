@@ -23,13 +23,15 @@
   <!--
     FONTS
     Serif: Instrument Serif (Google Fonts), regular + italic. Used for headings and body text.
-    Sans: General Sans, self-hosted.
+    Sans: General Sans, via Fontshare CDN.
   -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100&family=Instrument+Serif:ital@0;1&display=swap">
-  <!-- General Sans is self-hosted (see @font-face in css/styles.css) -->
-  <link rel="preload" href="assets/fonts/GeneralSans-Medium.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- General Sans: Fontshare CDN -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500&display=swap">
 
   <link rel="stylesheet" href="css/styles.css">
 
@@ -101,15 +103,19 @@
         <source media="(max-width: 767px)" srcset="assets/images/hero-portrait.webp">
         <img class="hero__img" src="assets/images/hero-landscape.webp" alt="Close-up of a hand with a sheer, polished manicure resting on pale stone" fetchpriority="high">
       </picture> -->
-      <video class="hero__media" src="assets/images/Hero.mp4" poster="assets/images/hero-poster.jpg"
-             aria-label="The Dún &amp; Dusk Nail Studio shopfront in Dún Laoghaire"
-             width="1280" height="720" muted autoplay loop playsinline preload="auto"></video>
+      <!-- 1080p (3.2 MB) for tablets/desktop, 720p (2 MB) for phones -->
+      <video class="hero__media" poster="assets/images/hero-poster.jpg"
+             aria-label="The Dún &amp; Dusk Nail Studio sign and nail work in Dún Laoghaire"
+             width="1920" height="1080" muted autoplay loop playsinline preload="auto">
+        <source src="assets/images/hero-1080.mp4" type="video/mp4" media="(min-width: 768px)">
+        <source src="assets/images/hero-720.mp4" type="video/mp4">
+      </video>
 
       <div class="hero__content">
-        <p class="hero__kicker label">Nail Studio · Dún Laoghaire</p>
         <h1 class="hero__title display-xl" id="hero-title">
-          <span class="line"><span class="line__inner">A little</span></span>
-          <span class="line"><span class="line__inner">more than nails.</span></span>
+          <!-- Alternating headline: phrase 2 is aria-hidden so the heading's accessible name stays stable -->
+          <span class="line"><span class="line__inner is-active" data-phrase="0">A little</span><span class="line__inner line__inner--alt" data-phrase="1" aria-hidden="true">A moment</span></span>
+          <span class="line"><span class="line__inner is-active" data-phrase="0">more than nails.</span><span class="line__inner line__inner--alt" data-phrase="1" aria-hidden="true">just for you.</span></span>
         </h1>
         <a class="btn btn--light hero__cta" href="#book" data-book>Book an Appointment</a>
       </div>
@@ -128,9 +134,9 @@
         </p>
 
         <figure class="studio__figure reveal-media">
-          <img class="studio__img ratio-4x5" src="assets/images/studio-01.jpg"
-               alt="Line drawing of the Dún &amp; Dusk Nail Studio shopfront on Sussex Street, Dún Laoghaire"
-               width="1086" height="1448" loading="lazy" decoding="async">
+          <img class="studio__img" src="assets/images/studio-01.jpg"
+               alt="Watercolour illustration of the Dún &amp; Dusk Nail Studio shopfront on Sussex Street, Dún Laoghaire"
+               width="1376" height="768" loading="lazy" decoding="async">
           <figcaption class="caption">The studio, Dún Laoghaire</figcaption>
         </figure>
 
@@ -179,7 +185,7 @@
               <span class="service-index__note">Strength for natural nails</span>
             </div>
           </li>
-          <li class="service-index__item reveal" data-image="assets/images/image-01.mp4" data-preview="Acrylic · sculpted shape">
+          <li class="service-index__item reveal" data-image="assets/images/service-04.png" data-preview="Acrylic · sculpted shape">
             <div class="service-index__row">
               <span class="service-index__num">04</span>
               <span class="service-index__name">Acrylic</span>
@@ -284,6 +290,7 @@
         <h2 class="display-xl booking__title reveal" id="booking-title">Your time,<br>reserved.</h2>
         <p class="body-lg booking__text reveal">Choose a treatment and a time that suits you. Please read our <a class="inline-link" href="policy.html">studio policy</a> before booking.</p>
         <a class="btn btn--silver booking__cta reveal" href="#" data-book data-book-external>Book an Appointment</a>
+        <p class="label booking__note reveal">Secure online booking via Treatwell</p>
       </div>
     </section>
 
@@ -348,6 +355,17 @@
     </div>
   </footer>
 
+  <!-- WhatsApp nudge: pops up once per visit a few seconds after arrival (js/main.js) -->
+  <div class="wa-bubble" data-wa-bubble hidden>
+    <a class="wa-bubble__msg" href="#visit" data-whatsapp>
+      <span class="wa-bubble__title">Hello from the studio</span>
+      <span class="wa-bubble__text">Questions before you book? Chat with us on WhatsApp.</span>
+    </a>
+    <button class="wa-bubble__close" type="button" aria-label="Dismiss message" data-wa-bubble-close>
+      <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
   <!-- Floating WhatsApp button: number and message are set in js/main.js (SITE.whatsappNumber) -->
   <a class="wa-float" href="#visit" data-whatsapp aria-label="Message Dún &amp; Dusk on WhatsApp">
     <span class="wa-float__label" aria-hidden="true">Message us</span>
@@ -355,11 +373,6 @@
       <svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
     </span>
   </a>
-
-  <!-- Mobile booking bar -->
-  <div class="book-bar" data-book-bar>
-    <a class="btn btn--silver book-bar__btn" href="#book" data-book>Book Now</a>
-  </div>
 
   <script src="js/main.js" defer></script>
 </body>

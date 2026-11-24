@@ -4,23 +4,9 @@
    5. Components      6. Sections   7. Motion   8. Responsive
    ========================================================= */
 
-/* ---------- 0. SELF-HOSTED FONTS ----------
-   General Sans (Fontshare, ITF Free Font License), served from our own domain
-   so no visitor data goes to a third-party font CDN. */
-@font-face {
-  font-family: "General Sans";
-  src: url("../assets/fonts/GeneralSans-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "General Sans";
-  src: url("../assets/fonts/GeneralSans-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
+/* ---------- 0. FONTS ----------
+   General Sans (Fontshare, ITF Free Font License) is loaded from the Fontshare CDN
+   in each page's <head>; Fraunces and Instrument Serif come from Google Fonts. */
 
 /* ---------- 1. DESIGN TOKENS (edit the palette here) ---------- */
 :root {
@@ -176,9 +162,8 @@ h1, h1.display-xl, h1.display-lg {
   letter-spacing: 0.005em;
   line-height: 1.4;
 }
-/* Uppercase is kept only for numbered section labels and the hero kicker */
-.section-head .label,
-.hero__kicker {
+/* Uppercase is kept only for numbered section labels */
+.section-head .label {
   font-size: var(--fs-eyebrow);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -432,13 +417,15 @@ body.menu-open .site-header .logo__img--dark { display: none; }
   object-fit: cover;
 }
 .hero__media .ph__label { position: absolute; top: calc(var(--header-h) + var(--space-3)); left: var(--gutter); }
-.hero::after { /* legibility shade, bottom-left only */
+.hero::after { /* legibility shade: light overall dim, deeper behind the headline (bottom-left) and nav */
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(18, 17, 16, 0.45) 0%, rgba(18, 17, 16, 0) 22%),
-    linear-gradient(to top, rgba(18, 17, 16, 0.6) 0%, rgba(18, 17, 16, 0) 55%);
+    linear-gradient(to bottom, rgba(18, 17, 16, 0.5) 0%, rgba(18, 17, 16, 0) 24%),
+    linear-gradient(to top, rgba(18, 17, 16, 0.72) 0%, rgba(18, 17, 16, 0.2) 45%, rgba(18, 17, 16, 0) 70%),
+    linear-gradient(to right, rgba(18, 17, 16, 0.5) 0%, rgba(18, 17, 16, 0.15) 50%, rgba(18, 17, 16, 0) 75%),
+    rgba(18, 17, 16, 0.26);
   pointer-events: none;
 }
 .hero__content {
@@ -449,7 +436,6 @@ body.menu-open .site-header .logo__img--dark { display: none; }
   margin-inline: auto;
   padding: 0 var(--gutter) clamp(3rem, 2rem + 5vw, 6rem);
 }
-.hero__kicker { margin-bottom: var(--space-3); color: rgba(241, 237, 230, 0.8); }
 .hero__title { max-width: 11ch; margin-bottom: var(--space-5); }
 .hero__folio {
   position: absolute;
@@ -462,16 +448,35 @@ body.menu-open .site-header .logo__img--dark { display: none; }
 
 .line { display: block; overflow: hidden; padding-bottom: 0.06em; }
 .line__inner { display: block; }
+/* Hero headline: both phrases share one grid cell per line, so the box is sized
+   to the larger phrase and never shifts when they swap */
+.hero__title .line { display: grid; overflow: visible; }  /* no mask: descenders (j, y) never clip */
+.hero__title .line__inner { grid-area: 1 / 1; }
+.hero__title .line__inner--alt { visibility: hidden; }
 
 /* Studio */
 .studio { row-gap: var(--space-5); }
 .studio .grid { row-gap: var(--space-6); }
 .studio__statement { grid-column: 4 / span 8; text-wrap: pretty; }
-.studio__figure { grid-column: 2 / span 4; grid-row: 2; }
-/* Photo is shot on white: multiply lets white take on the porcelain section colour */
-.studio__img { width: 100%; height: auto; object-fit: cover; mix-blend-mode: multiply; }
+.studio__figure { grid-column: 1 / span 7; grid-row: 2; }
+/* Watercolour on paper: multiply lets the paper take on the porcelain section colour,
+   and a feathered mask dissolves the rectangle so the painting bleeds into the page */
+.studio__img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1376 / 768;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: saturate(0.72) sepia(0.08) contrast(0.96); /* muted, warm-leaning palette to sit with the porcelain/oak tones */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%),
+                      linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%),
+              linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-composite: intersect;
+}
 .studio__body {
-  grid-column: 6 / -1;
+  grid-column: 9 / -1;
   grid-row: 2;
   align-self: end;
   color: var(--text-muted-on-light);
@@ -571,6 +576,7 @@ body.menu-open .site-header .logo__img--dark { display: none; }
 .booking__title { margin-top: var(--space-3); }
 .booking__text { max-width: 44ch; color: var(--text-muted-on-dark); }
 .booking__cta { margin-top: var(--space-2); }
+.booking__note { color: var(--text-muted-on-dark); opacity: .8; }
 
 /* Visit */
 .visit .grid { row-gap: var(--space-5); }
@@ -637,21 +643,6 @@ body.menu-open .site-header .logo__img--dark { display: none; }
 }
 .logo--footer { color: var(--porcelain); }
 
-/* Mobile booking bar */
-.book-bar {
-  position: fixed;
-  inset: auto 0 0 0;
-  z-index: 40;
-  display: none;
-  padding: 0.75rem var(--gutter) calc(0.75rem + env(safe-area-inset-bottom));
-  background: rgba(18, 17, 16, 0.94);
-  border-top: 1px solid var(--rule-on-dark);
-  transform: translateY(100%);
-  transition: transform var(--dur) var(--ease);
-}
-.book-bar.is-visible { transform: none; }
-.book-bar__btn { width: 100%; }
-
 /* Floating WhatsApp button: WhatsApp green with white glyph */
 .wa-float {
   position: fixed;
@@ -675,11 +666,20 @@ body.menu-open .site-header .logo__img--dark { display: none; }
   border-radius: 50%;
   background: #25D366;
   color: #fff;
-  box-shadow: 0 6px 18px rgba(18, 17, 16, 0.18);
-  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  position: relative;
+  box-shadow: 0 8px 22px rgba(18, 17, 16, 0.2), 0 0 0 0 rgba(37, 211, 102, 0);
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
+              scale 350ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 350ms var(--ease);
 }
+.wa-float__icon svg { position: relative; z-index: 1; }
 .wa-float:hover .wa-float__icon,
-.wa-float:focus-visible .wa-float__icon { background: #1DA851; color: #fff; }
+.wa-float:focus-visible .wa-float__icon {
+  background: #1DA851;
+  color: #fff;
+  scale: 1.08;
+  box-shadow: 0 12px 28px rgba(18, 17, 16, 0.24), 0 0 24px 4px rgba(37, 211, 102, 0.45);
+}
+.wa-float:active .wa-float__icon { scale: 0.95; transition-duration: 120ms; }
 
 /* "Message us" label slides out on desktop hover */
 .wa-float__label {
@@ -698,11 +698,120 @@ body.menu-open .site-header .logo__img--dark { display: none; }
 .wa-float:hover .wa-float__label,
 .wa-float:focus-visible .wa-float__label { opacity: 1; transform: none; }
 
-/* Gentle float: 4px drift, switched off for reduced motion */
-.js-motion .wa-float__icon { animation: wa-drift 4.5s var(--ease) infinite alternate; }
-@keyframes wa-drift {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-4px); }
+/* WhatsApp nudge bubble: a speech card above the button, tail pointing at it */
+.wa-bubble {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(var(--gutter) + 56px + 16px);
+  z-index: 46;
+  width: min(268px, calc(100vw - 2rem));
+  background: var(--porcelain-50);
+  color: var(--ink-900);
+  border-radius: 14px 14px 4px 14px;
+  box-shadow: 0 14px 34px rgba(18, 17, 16, 0.22), 0 2px 6px rgba(18, 17, 16, 0.08);
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  transform-origin: bottom right;
+  transition: opacity 450ms var(--ease), transform 550ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  pointer-events: none;
+}
+.wa-bubble[hidden] { display: none; }
+.wa-bubble.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.wa-bubble::after { /* tail */
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -7px;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  transform: rotate(45deg);
+  border-radius: 0 0 3px 0;
+}
+.wa-bubble__msg {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem 2.5rem 1.05rem 1.1rem;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+}
+.wa-bubble__title { font-family: var(--font-ui); font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.01em; }
+.wa-bubble__title::before { /* small green "online" dot */
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: #25D366;
+  vertical-align: 0.1em;
+}
+.wa-bubble__text { font-family: var(--font-ui); font-size: var(--fs-label); line-height: 1.45; color: var(--text-muted-on-light); }
+.wa-bubble__msg:hover .wa-bubble__text { color: var(--ink-900); }
+.wa-bubble__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted-on-light);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.wa-bubble__close:hover { background: rgba(27, 26, 24, 0.07); color: var(--ink-900); }
+body.menu-open .wa-bubble { opacity: 0; pointer-events: none; }
+
+/* Invitation motion (off for reduced motion): the button bobs gently, its green
+   glow breathes, and a soft ring ripples outward every few seconds */
+.js-motion .wa-float__icon { animation: wa-float 3.2s ease-in-out infinite; }
+.js-motion .wa-float__icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+  animation: wa-glow 3.2s ease-in-out infinite;
+}
+.js-motion .wa-float__icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #25D366;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+  animation: wa-ring 3.2s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+/* On hover it holds still and glows, so it feels like it responded */
+.js-motion .wa-float:hover .wa-float__icon,
+.js-motion .wa-float:focus-visible .wa-float__icon { animation-play-state: paused; }
+.js-motion .wa-float:hover .wa-float__icon::before,
+.js-motion .wa-float:focus-visible .wa-float__icon::before { animation: none; }
+.js-motion .wa-float:hover .wa-float__icon::after,
+.js-motion .wa-float:focus-visible .wa-float__icon::after { animation-play-state: paused; opacity: 0; }
+@keyframes wa-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@keyframes wa-glow {
+  0%, 100% { box-shadow: 0 0 10px 0 rgba(37, 211, 102, 0.25); }
+  50%      { box-shadow: 0 0 22px 4px rgba(37, 211, 102, 0.5); }
+}
+@keyframes wa-ring {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  70%  { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
 }
 
 /* ---------- 7. MOTION ---------- */
@@ -710,19 +819,45 @@ body.menu-open .site-header .logo__img--dark { display: none; }
 .js-motion .reveal { opacity: 0; transform: translateY(8px); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .js-motion .reveal.is-visible { opacity: 1; transform: none; }
 
-/* Clip the media inside, not the figure: a fully clipped figure never registers with IntersectionObserver */
-.js-motion .reveal-media > :not(figcaption) { clip-path: inset(0 0 100% 0); transition: clip-path var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease); }
-.js-motion .reveal-media.is-visible > :not(figcaption) { clip-path: inset(0 0 0 0); }
+/* Images: soft fade with a slight settle (no top-down wipe, which reads as slow loading).
+   Animate the media inside, not the figure, so the figure still registers with IntersectionObserver.
+   JS only adds .is-visible once the image has actually loaded. */
+.js-motion .reveal-media > :not(figcaption) {
+  opacity: 0;
+  transform: scale(1.035);
+  transition: opacity 1100ms var(--ease), transform 1800ms var(--ease);
+}
+.js-motion .reveal-media.is-visible > :not(figcaption) { opacity: 1; transform: none; }
+.js-motion .reveal-media figcaption { opacity: 0; transition: opacity var(--dur) var(--ease) 300ms; }
+.js-motion .reveal-media.is-visible figcaption { opacity: 1; }
+.experience__media { overflow: hidden; } /* keep the settle-in scale inside the frame */
 
 /* Hero entrance */
 .js-motion .hero__media { transform: scale(1.04); transition: transform 1800ms var(--ease); }
-.js-motion .hero .line__inner { transform: translateY(105%); transition: transform var(--dur-slow) var(--ease); }
-.js-motion .hero .line:nth-child(2) .line__inner { transition-delay: 120ms; }
-.js-motion .hero__kicker,
+/* Hero headline: soft focus-pull — each line fades in, rises a touch and sharpens */
+.js-motion .hero__title .line__inner {
+  opacity: 0;
+  transform: translateY(0.3em);
+  filter: blur(10px);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease), filter 900ms var(--ease);
+  will-change: opacity, transform, filter;
+}
+.js-motion .hero__title .line:nth-child(2) .line__inner { transition-delay: 110ms; }
 .js-motion .hero__cta { opacity: 0; transition: opacity var(--dur) var(--ease) 500ms; }
 .js-motion .hero.is-loaded .hero__media { transform: none; }
-.js-motion .hero.is-loaded .line__inner { transform: none; }
-.js-motion .hero.is-loaded .hero__kicker,
+.js-motion .hero.is-loaded .line__inner.is-active { opacity: 1; transform: none; filter: none; }
+/* Rotation: outgoing drifts up and dissolves; incoming rises from below once it has gone */
+.js-motion .hero__title .line__inner--alt { visibility: visible; }
+.js-motion .hero__title .line__inner.is-out {
+  opacity: 0;
+  transform: translateY(-0.2em);
+  filter: blur(10px);
+  transition-duration: 550ms;
+}
+.js-motion .hero__title.is-cycling .line__inner.is-active { transition-delay: 280ms; }
+.js-motion .hero__title.is-cycling .line:nth-child(2) .line__inner.is-active { transition-delay: 390ms; }
+.js-motion .hero__title.is-cycling .line:nth-child(2) .line__inner.is-out { transition-delay: 80ms; }
+.js-motion .hero .line__inner.is-reset { transition: none !important; }
 .js-motion .hero.is-loaded .hero__cta { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -734,7 +869,7 @@ body.menu-open .site-header .logo__img--dark { display: none; }
 @media (max-width: 1023px) {
   .section-head { grid-column: 1 / -1; margin-bottom: var(--space-2); }
   .studio__statement { grid-column: 1 / -1; }
-  .studio__figure { grid-column: 1 / span 7; grid-row: auto; }
+  .studio__figure { grid-column: 1 / -1; grid-row: auto; }
   .studio__body { grid-column: 1 / span 10; grid-row: auto; }
   .services__intro { grid-column: 1 / -1; }
   .services__preview { display: none; }
@@ -783,7 +918,6 @@ body.menu-open .site-header .logo__img--dark { display: none; }
   .hero__folio { display: none; }
   .hero__title { max-width: 9ch; }
 
-  .studio__figure { grid-column: 1 / span 10; }
   .studio__body { grid-column: 1 / -1; max-width: 100%; }
 
   .service-index__row { grid-template-columns: 2rem minmax(0, 1fr); row-gap: 0.25rem; }
@@ -802,10 +936,9 @@ body.menu-open .site-header .logo__img--dark { display: none; }
   .policy-list__item { grid-template-columns: 2rem minmax(0, 1fr); row-gap: var(--space-1); }
   .policy-list__body { grid-column: 2; }
 
-  .book-bar { display: block; }
   .wa-float { right: 1rem; bottom: 1rem; }
+  .wa-bubble { right: 1rem; bottom: calc(1rem + 56px + 14px); }
   .wa-float__label { display: none; }
-  body.book-bar-on .wa-float { bottom: calc(4.75rem + env(safe-area-inset-bottom)); } /* sit above the Book bar */
   body.menu-open .wa-float { opacity: 0; pointer-events: none; }
   .site-footer { padding-bottom: 5rem; }
 }
