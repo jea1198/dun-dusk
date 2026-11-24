@@ -67,6 +67,16 @@
 
   <!-- ============ HEADER ============ -->
   <header class="site-header" data-header>
+    <!-- Promo bar: text and end date are set in js/main.js (SITE.promo) -->
+    <div class="promo" data-promo hidden>
+      <a class="promo__link" href="#visit" data-promo-link>
+        <span class="promo__text" data-promo-text></span>
+        <span class="promo__cta">Claim<span class="promo__cta-long"> on WhatsApp</span> <span aria-hidden="true">→</span></span>
+      </a>
+      <button class="promo__close" type="button" aria-label="Dismiss offer" data-promo-close>
+        <svg viewBox="0 0 12 12" width="9" height="9" aria-hidden="true" focusable="false"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
     <div class="site-header__inner">
       <!-- White logo over the hero, black logo once the header turns light on scroll -->
       <a class="logo" href="#top" aria-label="Dún &amp; Dusk Nail Studio, home">

@@ -13,12 +13,49 @@ const SITE = {
   // WhatsApp: international format, digits only, no + or spaces. e.g. Irish mobile 087 123 4567 → "353871234567"
   whatsappNumber: "353894558383",
   whatsappMessage: "Hi Dún & Dusk, I'd like to ask about an appointment.",
+  // Promo bar at the top of the home page. Leave text empty to switch it off.
+  // endsOn: last day of the offer (YYYY-MM-DD, Irish time); the bar disappears after that day. "" = no end date.
+  promo: {
+    text: "30% off · Until 4 December",
+    startsOn: "2026-11-17", // first day of the offer (YYYY-MM-DD); "" = show straight away
+    endsOn: "2026-12-04",
+    // Pre-filled WhatsApp message when someone taps the bar
+    whatsappMessage: "Hi Dún & Dusk, I'd like to claim the 30% off offer.",
+  },
 };
 
 (() => {
   const root = document.documentElement;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!reduceMotion) root.classList.add("js-motion");
+
+  /* ---- Promo bar: shown until dismissed (per offer text) or until endsOn has passed ---- */
+  const promo = document.querySelector("[data-promo]");
+  if (promo && SITE.promo && SITE.promo.text) {
+    const key = "dd-promo-dismissed:" + SITE.promo.text;
+    let dismissed = false;
+    try { dismissed = localStorage.getItem(key) === "1"; } catch (_) {}
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Dublin" }).format(new Date()); // YYYY-MM-DD
+    const notYet = SITE.promo.startsOn && today < SITE.promo.startsOn;
+    const expired = SITE.promo.endsOn && today > SITE.promo.endsOn;
+    if (!dismissed && !notYet && !expired) {
+      promo.querySelector("[data-promo-text]").textContent = SITE.promo.text;
+      // Tapping the bar opens WhatsApp with an offer-specific message
+      if (SITE.whatsappNumber) {
+        const link = promo.querySelector("[data-promo-link]");
+        link.href = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(SITE.promo.whatsappMessage || SITE.whatsappMessage)}`;
+        link.target = "_blank";
+        link.rel = "noopener";
+      }
+      promo.hidden = false;
+      root.classList.add("has-promo");
+      promo.querySelector("[data-promo-close]").addEventListener("click", () => {
+        promo.hidden = true;
+        root.classList.remove("has-promo");
+        try { localStorage.setItem(key, "1"); } catch (_) {}
+      });
+    }
+  }
 
   /* ---- Links from config ---- */
   const setExternal = (selector, url) => {

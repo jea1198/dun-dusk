@@ -342,6 +342,64 @@ body.menu-open .site-header .logo__img--dark { display: none; }
   color: var(--ink-900);
   border-bottom-color: var(--rule-on-light);
 }
+/* Promo bar: slim strip above the nav, part of the fixed header */
+:root { --promo-h: 36px; }
+html.has-promo { scroll-padding-top: calc(var(--header-h) + var(--promo-h)); }
+.promo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--promo-h);
+  padding-inline: 2.75rem;
+  background: var(--ink-900);
+  color: var(--porcelain-dim);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+.promo[hidden] { display: none; }
+.promo__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.promo__text { font-weight: 500; color: var(--porcelain); }
+.promo__cta {
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--rule-on-dark);
+  color: var(--text-muted-on-dark);
+  transition: color var(--dur-fast) var(--ease);
+}
+.promo__link:hover .promo__cta,
+.promo__link:focus-visible .promo__cta { color: var(--porcelain); }
+.promo__close {
+  position: absolute;
+  right: calc(var(--gutter) - 0.5rem);
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted-on-dark);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.promo__close:hover { color: var(--porcelain); background: rgba(241, 237, 230, 0.08); }
+body.menu-open .promo { visibility: hidden; }
+@media (max-width: 479px) {
+  .promo { padding-inline: 1rem 2.5rem; }
+  .promo__cta-long { display: none; } /* "Claim →" on small phones */
+}
+
 .site-header__inner {
   max-width: var(--max-width);
   margin-inline: auto;
