@@ -153,9 +153,46 @@ const SITE = {
     setTimeout(() => el.remove(), 500);
     document.dispatchEvent(new Event("dd:consent-closed"));
   };
+  /* ---- Meta Pixel: fbevents.js is only requested after "Accept", and loaded once per page ---- */
+  const META_PIXEL_ID = "4687511571529585";
+  let pixelLoaded = false;
+  const hasConsent = () => getConsent() === "granted";
+  const loadPixel = () => {
+    if (window.fbq) {
+      // Already loaded on this page (accept → decline → accept): re-grant, no second init/PageView
+      window.fbq("consent", "grant");
+      return;
+    }
+    if (pixelLoaded) return;
+    pixelLoaded = true;
+    /* Meta's standard base code */
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", META_PIXEL_ID);
+    window.fbq("track", "PageView");
+  };
+  const stopPixel = () => {
+    if (typeof window.fbq === "function") window.fbq("consent", "revoke");
+    // Remove the first-party Meta cookies set while consent was on
+    ["_fbp", "_fbc"].forEach((name) => {
+      const host = location.hostname.replace(/^www\./, "");
+      [`; domain=.${host}`, ""].forEach((domain) => {
+        document.cookie = `${name}=; Max-Age=0; path=/${domain}`;
+      });
+    });
+  };
+  const trackPixel = (name) => {
+    if (hasConsent() && typeof window.fbq === "function") window.fbq("track", name);
+  };
+  if (hasConsent()) loadPixel(); // returning visitor who already accepted
+
   const setConsent = (value) => {
     try { localStorage.setItem(CONSENT_KEY, value); } catch (_) {}
     if (typeof window.gtag === "function") window.gtag("consent", "update", { analytics_storage: value });
+    if (value === "granted") loadPixel(); else stopPixel();
     closeConsent();
   };
   const openConsent = () => {
@@ -166,7 +203,7 @@ const SITE = {
     consentEl.setAttribute("aria-label", "Cookie preferences");
     consentEl.innerHTML =
       '<p class="consent__title">Cookies</p>' +
-      '<p class="consent__text">We use analytics cookies to understand how visitors use our site. No advertising, no selling of data.</p>' +
+      '<p class="consent__text">We use analytics cookies (Google Analytics) and the Meta Pixel to understand how visitors use our site and measure our ads. We never sell your data. <a class="plain-link" href="policy.html#cookies">Learn more</a></p>' +
       '<div class="consent__actions">' +
       '<button class="consent__btn" type="button" data-consent="denied">Decline</button>' +
       '<button class="consent__btn consent__btn--primary" type="button" data-consent="granted">Accept</button>' +
@@ -204,6 +241,12 @@ const SITE = {
     else if (href.startsWith("mailto:")) trackEvent("email_click", params);
     else if (a.matches("[data-instagram]")) trackEvent("instagram_click", params);
     else if (a.matches("[data-directions]")) trackEvent("directions_click", params);
+
+    // Meta Pixel events, decided by where the link goes (only sent with consent; see trackPixel)
+    const url = (a.href || "").toLowerCase();
+    if (url.includes("treatwell")) trackPixel("Lead");
+    else if (url.startsWith("tel:") || url.includes("wa.me") || url.includes("whatsapp.com")) trackPixel("Contact");
+    else if (/google\.[a-z.]+\/maps|maps\.google\.|maps\.app\.goo\.gl|goo\.gl\/maps|maps\.apple\.com/.test(url)) trackPixel("FindLocation");
   }, true);
 
   /* ---- Footer year ---- */
